@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="blue">#2A4ED1</color>
+    <color name="black_variant_1">#27282C</color>
+    <color name="sky_blue">#56ABE9</color>
+    <color name="gray">#6C757D</color>
+    <color name="white_variant">#E5E5E5</color>
+    <color name="red">#D90429</color>
+    
+    <color name="button_color">#2A4ED1</color>
+    <color name="icon_color">#2A4ED1</color>
+    <color name="text_color">#2A4ED1</color>
+
+    <color name="card_view_color">#2A4ED1</color>
+
+    <color name="bottom_navigation_color">#FFFFFFFF</color>
+
+    <color name="item_text_color">#2A4ED1</color>
+
+    <color name="card_view_bg_color">#FFFFFFFF</color>
+
+    <color name="item_chat_icon_color">#2A4ED1</color>
+
+    <color name="text_color_chat">#2A4ED1</color>
+
+    <color name="item_profile_text_color">#FF000000</color>
+
+    <color name="back_icon_color_chat">#2A4ED1</color>
+
+    <color name="icon_color_chat">#2A4ED1</color>
+
+    <color name="card_view_bg_chat">#2A4ED1</color>
+    
+    <color name="text_color_hint">#6C757D</color>
+    <color name="cursor_drawable_hint">#6C757D</color>
+
+    <color name="bottom_sheet_icon_color">#2A4ED1</color>
+
+    <color name="bottom_sheet_cancel_button_color">#FFFFFFFF</color>
+
+    <color name="bottom_sheet_button_color">#2A4ED1</color>
+
+    <color name="user_chat_bubble_bg_color">#1670F6</color>
+    <color name="text_color_chat_bubble">#FFFFFFFF</color>
+
+    <color name="assistant_chat_bubble_bg_color">#F2F7FF</color>"
+    <color name="assistant_text_color_chat_bubble">#2A4ED1</color>
+
+    <color name="circuit_color">#2A4ED1</color>
+</resources>

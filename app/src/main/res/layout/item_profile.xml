@@ -1,0 +1,25 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp">
+
+    <TextView
+        android:id="@+id/tv_option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="20dp"
+        android:fontFamily="@font/poppins_bold"
+        android:textColor="@color/item_profile_text_color"
+        android:text="Option"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/iv_arrow"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/round_arrow_forward_ios_24" />
+
+</RelativeLayout>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginBottom="7dp">
+
+        <TextView
+            android:id="@+id/tv_show_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_toStartOf="@id/card_view"
+            android:background="@drawable/user_message_bg"
+            android:paddingLeft="7dp"
+            android:paddingTop="10dp"
+            android:paddingRight="7dp"
+            android:paddingBottom="10dp"
+            android:text="Solve your doubts with Diana"
+            android:textSize="14sp"
+            android:textColor="@color/text_color_chat_bubble"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="8dp"
+            android:layout_alignParentEnd="true"
+            app:cardCornerRadius="75dp">
+
+            <ImageView
+                android:id="@+id/iv_user"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>
+
+</RelativeLayout>

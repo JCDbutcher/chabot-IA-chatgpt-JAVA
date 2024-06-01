@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BottomNavViewStyle" parent="Widget.MaterialComponents.BottomNavigationView">
+        <!-- Ajusta el color de fondo cuando se selecciona un elemento -->
+        <item name="android:background">@android:color/transparent</item>
+        <!-- Ajusta el color de texto cuando se selecciona un elemento -->
+        <item name="itemBackground">@color/bottom_nav_colors</item>
+        <item name="android:textColorPrimary">@color/bottom_nav_colors</item>
+    </style>
+</resources>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white_variant">#E5E5E5</color>
+
+    <color name="button_color">#FFFFFFFF</color>
+    <color name="icon_color">#FFFFFFFF</color>
+    <color name="text_color">#56ABE9</color>
+
+    <color name="card_view_color">#56ABE9</color>
+
+    <color name="bottom_navigation_color">#FF000000</color>
+
+    <color name="item_text_color">#FFFFFFFF</color>
+
+    <color name="card_view_bg_color">#FF000000</color>
+
+    <color name="item_chat_icon_color">#56ABE9</color>
+
+    <color name="text_color_chat">#FFFFFFFF</color>
+
+    <color name="item_profile_text_color">#FFFFFFFF</color>
+
+    <color name="back_icon_color_chat">#56ABE9</color>
+
+    <color name="icon_color_chat">#56ABE9</color>
+
+    <color name="card_view_bg_chat">#56ABE9</color>
+
+    <color name="text_color_hint">#E5E5E5</color>
+    <color name="cursor_drawable_hint">#E5E5E5</color>
+
+    <color name="bottom_sheet_icon_color">#56ABE9</color>
+
+    <color name="bottom_sheet_cancel_button_color">#6C757D</color>"
+
+    <color name="bottom_sheet_button_color">#56ABE9</color>
+
+    <color name="user_chat_bubble_bg_color">#56ABE9</color>
+    <color name="text_color_chat_bubble">#FFFFFFFF</color>
+
+    <color name="assistant_chat_bubble_bg_color">#FF000000</color>"
+    <color name="assistant_text_color_chat_bubble">#FFFFFFFF</color>
+
+    <color name="circuit_color">#56ABE9</color>
+</resources>
