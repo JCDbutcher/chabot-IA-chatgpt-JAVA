@@ -29,7 +29,6 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.chatIA.chatbotIA.R;
-//import com.ren.dianav2.database_SQLITE.ImageDatabaseManager;
 import com.chatIA.chatbotIA.listener.ICameraImagePermissionHandler;
 import com.chatIA.chatbotIA.listener.IGalleryPermissionHandler;
 import com.squareup.picasso.Picasso;

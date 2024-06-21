@@ -1,7 +1,7 @@
 package com.chatIA.chatbotIA.assistants.models.response;
 
-import com.chatIA.chatbotIA.assistants.models.Metadata;
-import com.chatIA.chatbotIA.assistants.models.ToolResources;
+import com.ren.chatbotIA.assistants.models.Metadata;
+import com.ren.chatbotIA.assistants.models.ToolResources;
 
 import java.util.ArrayList;
 

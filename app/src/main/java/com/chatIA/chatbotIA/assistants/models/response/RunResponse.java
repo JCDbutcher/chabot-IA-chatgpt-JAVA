@@ -1,8 +1,8 @@
 package com.chatIA.chatbotIA.assistants.models.response;
 
-import com.chatIA.chatbotIA.assistants.models.Metadata;
-import com.chatIA.chatbotIA.assistants.models.Tool;
-import com.chatIA.chatbotIA.assistants.models.TruncationStrategy;
+import com.ren.chatbotIA.assistants.models.Metadata;
+import com.ren.chatbotIA.assistants.models.Tool;
+import com.ren.chatbotIA.assistants.models.TruncationStrategy;
 
 import java.util.ArrayList;
 

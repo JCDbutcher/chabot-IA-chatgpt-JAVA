@@ -88,6 +88,8 @@ public class ChatScreen extends AppCompatActivity {
     private FirebaseFirestore db;
     private Conversation conversation;
     private boolean isFavorite = false;
+    private boolean isScripted = false;
+    private String script = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,21 +116,23 @@ public class ChatScreen extends AppCompatActivity {
 
         requestManager = new RequestManager(this);
 
-        microphoneBtn.setOnClickListener(v -> sendVoiceToText());
-        // Visibilidad del botón
-        sendButton.setVisibility(View.GONE);
-
         String origin = getIntent().getStringExtra("Origin");
         System.out.println("ORIGEN: " + origin);
         if (origin.equals("NewChat")) {
-            idAssistant = "asst_Kq8380zEKAB8F5J6oKOfwKc0";
+            idAssistant = "asst_frUYck2uPf2O7yjl2aqpRQl1";
+            isScripted = false;
             createThread();
             System.out.println("Debe mostrarse la pantalla para un nuevo chat");
         } else if (origin.equals("NewChatScripted")) {
-            String script = getIntent().getStringExtra("script");
-            idAssistant = "asst_Kq8380zEKAB8F5J6oKOfwKc0";
+            script = getIntent().getStringExtra("Script");
+            idAssistant = "asst_frUYck2uPf2O7yjl2aqpRQl1";
+            isScripted = true;
             createThread();
             System.out.println("Debe mostrarse la pantalla para un nuevo chat con un string ya mandado");
+        } else if (origin.equals("NewChatExplore")) {
+            idAssistant = getIntent().getStringExtra("IdAssistant");
+            createThread();
+            System.out.println("Debe mostrarse la pantalla para un nuevo chat con un asistente escogido");
         } else if (origin.equals("ExistingChat")) {
             idThread = getIntent().getStringExtra("IdThread");
             System.out.println("Debe mostrarse el chat con la conversación ya lista para seguir");
@@ -137,8 +141,17 @@ public class ChatScreen extends AppCompatActivity {
             idAssistant = getIntent().getStringExtra("IdAssistant");
             Toast.makeText(this, "ID OBTENIDO: " + idAssistant, Toast.LENGTH_SHORT).show();
             System.out.println("Debe mostrarse el chat con el asistente elegido");
+        } else {
+            Toast.makeText(this, "ID OBTENIDO EN EL RESTO: " + idAssistant, Toast.LENGTH_SHORT).show();
         }
 
+        checkIfThreadExists();
+        String title = tvName.getText().toString();
+        conversation = new Conversation(idThread, currentUser.getUid(), messages, idAssistant, title);
+
+        microphoneBtn.setOnClickListener(v -> sendVoiceToText());
+        // Visibilidad del botón
+        sendButton.setVisibility(View.GONE);
 
         // Configuración del RecyclerView
         messageAdapter = new ReinforcedMessageAdapter(this, messages, currentUser);
@@ -148,10 +161,14 @@ public class ChatScreen extends AppCompatActivity {
         linearLayoutManager.setStackFromEnd(true);
         rvTextChat.setLayoutManager(linearLayoutManager);
 
-        checkIfThreadExists();
-        String title = "";
-        conversation = new Conversation(idThread, currentUser.getUid(), messages, idAssistant, title);
-
+        if(origin.equals("NewChatScripted")){
+            try {
+                Thread.sleep(1000);
+                sendMessage();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
         onClickBackButton(ibBack);
         onEditTextChange(messageEditText);
         changeStatusBarColor();
@@ -188,7 +205,10 @@ public class ChatScreen extends AppCompatActivity {
      */
     private void onClickMicButton(ImageButton button) {
         button.setOnClickListener(v -> {
+            System.out.println(conversation.toString());
             Intent intent = new Intent(this, VoiceChatScreen.class);
+            intent.putExtra("IdThread", conversation.getId());
+            intent.putExtra("IdAssistant", conversation.getIdAssistant());
             startActivityForResult(intent, 20);
         });
     }
@@ -249,7 +269,6 @@ public class ChatScreen extends AppCompatActivity {
         changeNameDialog = new Dialog(this);
         changeNameDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         changeNameDialog.setContentView(R.layout.bottom_sheet_change_name);
-
 
         EditText etName = changeNameDialog.findViewById(R.id.et_name);
         Button btnSave = changeNameDialog.findViewById(R.id.button_save);
@@ -374,7 +393,12 @@ public class ChatScreen extends AppCompatActivity {
      * Envía un mensaje.
      */
     private void sendMessage() {
-        String question = messageEditText.getText().toString().trim();
+        String question = "";
+        if(!isScripted){
+            question = messageEditText.getText().toString().trim();
+        } else {
+            question = script;
+        }
         if (!question.isEmpty()) {
 
             MessageRequest messageRequest = new MessageRequest("user", question);
@@ -390,6 +414,7 @@ public class ChatScreen extends AppCompatActivity {
             requestManager.createMessage("assistants=v2", idThread, messageRequest, iMessageResponse);
 
             messageEditText.setText("");
+            isScripted = false;
         }
     }
 
@@ -406,6 +431,7 @@ public class ChatScreen extends AppCompatActivity {
         @Override
         public void didFetch(ThreadResponse threadResponse, String msg) {
             idThread = threadResponse.id;
+            conversation.setId(idThread);
             Log.d("CHAT SCREEN", "Response Thread id: " + idThread);
             showMessage("Thread created with ID: " + idThread);
         }
@@ -527,6 +553,7 @@ public class ChatScreen extends AppCompatActivity {
                             addMessage(messageRequest);
                             i++;
                         }
+                        saveConversation();
                     }
                 }
                 break;
@@ -578,7 +605,6 @@ public class ChatScreen extends AppCompatActivity {
                         boolean threadExists = false;
                         for (int i = 0; i < queryDocumentSnapshots.getDocuments().size(); i++) {
                             if (queryDocumentSnapshots.getDocuments().get(i).getId().equals(idThread)) {
-                                System.out.println("entraaaaaaaaaaaa________________");
                                 threadExists = true;
                                 i = queryDocumentSnapshots.getDocuments().size() + 1;
                                 loadMessages(idThread);
@@ -600,6 +626,8 @@ public class ChatScreen extends AppCompatActivity {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         conversation = documentSnapshot.toObject(Conversation.class);
+                        idThread = conversation.getId();
+                        idAssistant = conversation.getIdAssistant();
                         if (conversation != null) {
                             List<MessageRequest> messages = conversation.getMessages();
                             updateRecyclerView(messages);
@@ -689,5 +717,4 @@ public class ChatScreen extends AppCompatActivity {
             favoriteBtn.setImageResource(R.drawable.favorite_unselect_icon);
         }*/
     }
-
 }

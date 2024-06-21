@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.ren.dianav2"
+    namespace = "com.chatIA.chatbotIA"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.ren.dianav2"
+        applicationId = "com.chatIA.chatbotIA"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -16,7 +16,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false

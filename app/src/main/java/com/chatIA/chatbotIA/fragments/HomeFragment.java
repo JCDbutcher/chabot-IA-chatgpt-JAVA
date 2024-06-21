@@ -2,18 +2,19 @@ package com.chatIA.chatbotIA.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,14 +25,14 @@ import com.chatIA.chatbotIA.adapters.ExplorerAdapter;
 import com.chatIA.chatbotIA.adapters.RecentChatAdapter;
 import com.chatIA.chatbotIA.assistants.models.Conversation;
 import com.chatIA.chatbotIA.assistants.models.response.AssistantData;
-import com.chatIA.chatbotIA.assistants.models.response.ListAssistantResponse;/*
-import com.ren.dianav2.database.ImageDatabaseManager;*/
+import com.chatIA.chatbotIA.assistants.models.response.ListAssistantResponse;
 import com.chatIA.chatbotIA.helpers.RequestManager;
 import com.chatIA.chatbotIA.listener.IAssistantClickListener;
 import com.chatIA.chatbotIA.listener.IChatClickListener;
 import com.chatIA.chatbotIA.listener.IListAssistantResponse;
 import com.chatIA.chatbotIA.models.ChatItem;
 import com.chatIA.chatbotIA.models.Item;
+import com.chatIA.chatbotIA.screens.AllChatsScreen;
 import com.chatIA.chatbotIA.screens.ChatScreen;
 import com.squareup.picasso.Picasso;
 
@@ -64,6 +65,9 @@ public class HomeFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private FirebaseFirestore db;
+    private EditText et_ScriptedMessage;
+    private TextView tv_AllChats;
+    private ImageButton ib_send;
 /*
     private ImageDatabaseManager miManager;*/
 
@@ -108,8 +112,11 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         rv_explore = view.findViewById(R.id.rv_explore);
         rv_recent_chat = view.findViewById(R.id.rv_recent_chat);
-        tvUsername = view.findViewById(R.id.tv_username);
+        tvUsername = view.findViewById(R.id.tv_typeChat);
         ivProfile = view.findViewById(R.id.iv_profile);
+        et_ScriptedMessage = view.findViewById(R.id.et_ScriptedMessage);
+        tv_AllChats = view.findViewById(R.id.tv_see_all);
+        ib_send = view.findViewById(R.id.send_btn);
 
         requestManager = new RequestManager(requireContext());
 
@@ -143,14 +150,17 @@ public class HomeFragment extends Fragment {
             }*/
 
             String profile = currentUser.getPhotoUrl() != null ? currentUser.getPhotoUrl().toString() : null;
-            if(profile!=null){
+            if (profile != null) {
                 Picasso.get().load(profile).into(ivProfile);
             }
         }
 
+        sendScriptedMessage();
+
+        setOnClickAllChats();
+
         return view;
     }
-
 
     /**
      * Agrega datos a las listas de elementos y chats.
@@ -190,17 +200,33 @@ public class HomeFragment extends Fragment {
 
     private final IAssistantClickListener listener = id -> {
         Intent intent = new Intent(HomeFragment.this.getContext(), ChatScreen.class);
-        intent.putExtra("Origin", "NewChat");
+        intent.putExtra("Origin", "NewChatExplore");
         intent.putExtra("IdAssistant", id);
         startActivity(intent);
     };
 
-    private final IChatClickListener chatClickListener = id -> {
-        Intent intent = new Intent(HomeFragment.this.getContext(), ChatScreen.class);
-        intent.putExtra("Origin", "ExistingChat");
-        intent.putExtra("IdThread", id);
-        startActivity(intent);
+    private final IChatClickListener chatClickListener = new IChatClickListener() {
+        @Override
+        public void onRecentChatClicked(String id) {
+            Intent intent = new Intent(HomeFragment.this.getContext(), ChatScreen.class);
+            intent.putExtra("Origin", "ExistingChat");
+            intent.putExtra("IdThread", id);
+            startActivity(intent);
+        }
+
+        @Override
+        public void onDeleteChatClicked(String id) {
+            deleteChat(id);
+        }
     };
+
+    private void deleteChat(String id) {
+        db.collection("conversation").document(id)
+                .delete()
+                .addOnSuccessListener(unused -> loadConversation())
+                .addOnFailureListener(e -> Log.e("HomeFragment", "Error when deleting element: "
+                        + e.getMessage()));
+    }
 
     private void loadConversation() {
         db.collection("conversation")
@@ -217,12 +243,34 @@ public class HomeFragment extends Fragment {
                             LinearLayoutManager.VERTICAL, false));
                     recentChatAdapter = new RecentChatAdapter(getContext(), conversations, chatClickListener);
                     rv_recent_chat.setAdapter(recentChatAdapter);
+
                 })
                 .addOnFailureListener(e -> Log.d("HOME FRAGMENT", "conversation:onError", e));
     }
 
     private void showMessage(String msg) {
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    private void sendScriptedMessage() {
+        ib_send.setOnClickListener(v -> {
+            if (!et_ScriptedMessage.getText().toString().isEmpty()) {
+                Intent intent = new Intent(getContext(), ChatScreen.class);
+                intent.putExtra("Origin", "NewChatScripted");
+                intent.putExtra("Script", et_ScriptedMessage.getText().toString());
+                startActivity(intent);
+            } else {
+                Toast.makeText(getContext(), "Debe introducir algo", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setOnClickAllChats() {
+        tv_AllChats.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), AllChatsScreen.class);
+            intent.putExtra("Type", "Recent");
+            startActivity(intent);
+        });
     }
 /*
     private void loadSavedProfileImage() {

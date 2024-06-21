@@ -2,18 +2,18 @@ package com.chatIA.chatbotIA.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,9 +23,9 @@ import com.chatIA.chatbotIA.R;
 import com.chatIA.chatbotIA.adapters.RecentChatAdapter;
 import com.chatIA.chatbotIA.adapters.SavedChatAdapter;
 import com.chatIA.chatbotIA.assistants.models.Conversation;
-//import com.ren.dianav2.database.ImageDatabaseManager;
 import com.chatIA.chatbotIA.listener.IChatClickListener;
 import com.chatIA.chatbotIA.models.ChatItem;
+import com.chatIA.chatbotIA.screens.AllChatsScreen;
 import com.chatIA.chatbotIA.screens.ChatScreen;
 import com.squareup.picasso.Picasso;
 
@@ -57,6 +57,8 @@ public class ChatFragment extends Fragment {
     private FirebaseUser currentUser;
     private FirebaseFirestore db;
     private ImageView ivProfile;
+    private TextView tvSeeAllSaved;
+    private TextView tvSeeAllRecent;
 
     public ChatFragment() {
         // Constructor público requerido
@@ -103,6 +105,9 @@ public class ChatFragment extends Fragment {
         btnOption1 = view.findViewById(R.id.btn_option1);
         ivProfile = view.findViewById(R.id.iv_profile);
 
+        tvSeeAllSaved = view.findViewById(R.id.tv_see_all);
+        tvSeeAllRecent = view.findViewById(R.id.tv_see_all_recent);
+
         recyclerViewChat.setHasFixedSize(true);
         recyclerViewChat.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL, false));
@@ -139,6 +144,9 @@ public class ChatFragment extends Fragment {
                 Picasso.get().load(profile).into(ivProfile);
             }
         }*/
+
+        setOnClickAllChats();
+
         return view;
     }
 
@@ -236,10 +244,31 @@ public class ChatFragment extends Fragment {
                 .addOnFailureListener(e -> Log.e("ChatFragment", "Error loading saved chats", e));
     }
 
-    private final IChatClickListener chatClickListener = id -> {
-        Intent intent = new Intent(this.getContext(), ChatScreen.class);
-        intent.putExtra("Origin", "ExistingChat");
-        intent.putExtra("IdThread", id);
-        startActivity(intent);
+    private final IChatClickListener chatClickListener = new IChatClickListener() {
+        @Override
+        public void onRecentChatClicked(String id) {
+            Intent intent = new Intent(ChatFragment.this.getContext(), ChatScreen.class);
+            intent.putExtra("Origin", "ExistingChat");
+            intent.putExtra("IdThread", id);
+            startActivity(intent);
+        }
+
+        @Override
+        public void onDeleteChatClicked(String id) {
+            //TODO Not implemented yet
+        }
     };
+
+    private void setOnClickAllChats() {
+        tvSeeAllSaved.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), AllChatsScreen.class);
+            intent.putExtra("Type", "Saved");
+            startActivity(intent);
+        });
+        tvSeeAllRecent.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), AllChatsScreen.class);
+            intent.putExtra("Type", "Recent");
+            startActivity(intent);
+        });
+    }
 }

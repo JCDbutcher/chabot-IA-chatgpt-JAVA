@@ -97,6 +97,8 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerViewHolder> {
                     break;
                 case 2:
                 case 3:
+                case 4:
+                case 5:
                     if (position - items.size() < dataList.size()) {
                         clickListener.onAssistantClicked(dataList.get(position - items.size()).id);
                     } else {
